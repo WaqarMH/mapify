@@ -446,14 +446,15 @@ async function generateMap() {
         
         const result = await response.json();
         
-        if (result.success) {
+        // Check if the response indicates success and has either success flag or mapId
+        if ((result.success || result.mapId) && result.embedCode) {
             // Show result section
             document.getElementById('result').style.display = 'block';
             document.getElementById('embedCode').textContent = result.embedCode;
             
             // Update preview iframe
             const previewIframe = document.createElement('iframe');
-            previewIframe.src = `/embed/${result.mapId}`;
+            previewIframe.src = `/embed/${result.mapId || result.embedCode.match(/embed\/([^"']+)/)?.[1] || ''}`;
             previewIframe.width = '100%';
             previewIframe.height = '300';
             previewIframe.style.border = 'none';
@@ -465,8 +466,11 @@ async function generateMap() {
             
             // Scroll to result
             document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+            
+            // Show success message
+            showMessage('Map generated successfully!', 'success');
         } else {
-            throw new Error('Failed to generate map');
+            throw new Error(result.message || 'Failed to generate map');
         }
     } catch (error) {
         console.error('Error:', error);
