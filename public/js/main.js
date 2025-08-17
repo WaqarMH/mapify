@@ -460,9 +460,11 @@ async function generateMap() {
             previewIframe.style.border = 'none';
             previewIframe.style.borderRadius = '4px';
             
-            const previewContainer = document.getElementById('previewIframe');
-            previewContainer.innerHTML = '';
-            previewContainer.appendChild(previewIframe);
+            const previewContainer = document.getElementById('mapPreview');
+            if (previewContainer) {
+                previewContainer.innerHTML = '';
+                previewContainer.appendChild(previewIframe);
+            }
             
             // Scroll to result
             document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
